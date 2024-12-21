@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代理服务器信息</title>
+    <link rel="stylesheet" href="../css/proxy_info.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>代理服务器信息</h1>
+            <p>保护chatgpt账号，请勿泄露代理服务器的信息。</p>
+        </div>
+
+        <div class="info-card">
+            <div class="info-item">
+                <strong>IP 地址:</strong>
+                <p class="warning">⚠️ 请勿泄露该 IP 地址，避免我们的代理服务器遭受攻击！</p>
+                <span id="server-ip" class="sensitive_info">192.168.1.1</span>
+            </div>
+            <div class="info-item">
+                <strong>远程端口:</strong>
+                <span id="remote-port" class="sensitive_info">1080</span>
+            </div>
+            <div class="info-item">
+                <strong>本地端口:</strong>
+                <span id="local-port" class="sensitive_info">1081</span>
+            </div>
+            <div class="info-item">
+                <strong>加密方法:</strong>
+                <span id="encryption-method" class="sensitive_info">AES-256-GCM</span>
+            </div>
+            <div class="info-item">
+                <strong>代理状态:</strong>
+                <span id="proxy-state">未运行</span>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; BIT超级共享GPT | 保护账号人人有责</p>
+        </footer>
+
+        <script src="../js/proxy_info.js"></script>
+    </div>
+</body>
+
+</html>

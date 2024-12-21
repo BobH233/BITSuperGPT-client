@@ -1,0 +1,89 @@
+/* 页面整体样式 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* 登录框的容器样式 */
+.login-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 320px; /* 可根据需要调整宽度 */
+    text-align: center;
+}
+
+/* 标题样式 */
+h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+    font-weight:     bold;
+    background: linear-gradient(45deg, #ff9a8b, #ff6a88,#d0a6f0, #4fd4ff,     #ff6c70); 
+    -webkit-background-clip: text;
+    color:transparent;
+}
+
+/* 登录框内的输入框和按钮 */
+.login-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 使子元素居中 */
+}
+
+.input-group {
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 280px; /* 设置最大宽度 */
+    text-align: left;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* 确保内边距不会影响宽度 */
+}
+
+#login-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 280px; /* 设置最大宽度 */
+    box-sizing: border-box; /* 确保内边距不会影响宽度 */
+    background: linear-gradient(45deg, #ff9a8b, #ff6a88, #d0a6f0, #4fd4ff, #ff6c70);
+    background-size: 200% 200%; /* 设置渐变背景更大的尺寸，用于动画 */
+    transition: all 0.3s ease; /* 平滑过渡 */
+}
+
+#login-btn:hover {
+    background-position: 100% 0; /* 改变背景位置来制造渐变动画 */
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    display: none; /* 默认隐藏错误消息 */
+}

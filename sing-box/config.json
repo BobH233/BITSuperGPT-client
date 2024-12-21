@@ -1,0 +1,147 @@
+{
+  "log": {
+    "level": "warn",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns_proxy",
+        "address": "https://1.1.1.1/dns-query",
+        "address_resolver": "dns_resolver",
+        "strategy": "ipv4_only",
+        "detour": "proxy"
+      },
+      {
+        "tag": "dns_direct",
+        "address": "https://dns.alidns.com/dns-query",
+        "address_resolver": "dns_resolver",
+        "strategy": "ipv4_only",
+        "detour": "direct"
+      },
+      {
+        "tag": "dns_block",
+        "address": "rcode://refused"
+      },
+      {
+        "tag": "dns_resolver",
+        "address": "223.5.5.5",
+        "strategy": "ipv4_only",
+        "detour": "direct"
+      }
+    ],
+    "rules": [
+      {
+        "outbound": "dns_resolver",
+        "server": "dns_resolver"
+      },
+      {
+        "clash_mode": "direct",
+        "server": "dns_direct"
+      },
+      {
+        "clash_mode": "global",
+        "server": "dns_proxy"
+      },
+      {
+        "domain_suffix": [
+          "chatgpt.com",
+          "openai.com",
+          "auth0.com",
+          "oaistatic.com",
+          "oaiusercontent.com",
+          "gravatar.com",
+          "cloudflare.com",
+          "wp.com"
+        ],
+        "server": "dns_proxy"
+      }
+    ],
+    "final": "dns_block",
+    "strategy": "",
+    "disable_cache": false,
+    "disable_expire": false,
+    "independent_cache": false,
+    "reverse_mapping": false,
+    "fakeip": {}
+  },
+  "inbounds": [
+    {
+      "type": "socks",
+      "tag": "socks",
+      "listen": "127.0.0.1",
+      "listen_port": 19872,
+      "sniff": true,
+      "sniff_override_destination": true
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "shadowsocks",
+      "tag": "proxy",
+      "server": "<你的绿色服务器ip>",
+      "server_port": 8388,
+      "method": "<你的绿色服务器加密密码>",
+      "password": "<你的绿色服务器连接密码>"
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    },
+    {
+      "type": "dns",
+      "tag": "dns_out"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "protocol": "dns",
+        "outbound": "dns_out"
+      },
+      {
+        "outbound": "proxy",
+        "domain": [
+          "chatgpt.com",
+          "openai.com",
+          "auth0.com",
+          "oaistatic.com",
+          "oaiusercontent.com",
+          "gravatar.com",
+          "cloudflare.com",
+          "wp.com"
+        ],
+        "domain_suffix": [
+          ".chatgpt.com",
+          ".openai.com",
+          ".auth0.com",
+          ".oaistatic.com",
+          ".oaiusercontent.com",
+          ".gravatar.com",
+          ".cloudflare.com",
+          ".wp.com"
+        ]
+      },
+      {
+        "ip_is_private": true,
+        "outbound": "direct"
+      },
+      {
+        "outbound": "block",
+        "port_range": "0:65535"
+      }
+    ],
+    "rule_set": [],
+    "final": "block",
+    "auto_detect_interface": true
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": false
+    }
+  }
+}

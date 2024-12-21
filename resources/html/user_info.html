@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户设置</title>
+    <link rel="stylesheet" href="../css/user_info.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>用户设置</h1>
+            <p>管理您的个人信息和偏好设置</p>
+        </div>
+
+        <div class="user-card">
+            <div class="user-avatar" id="user-avatar" style="background-image: url('../image/logo.png');"></div>
+            <div class="username" id="username">用户名</div>
+        </div>
+
+        <div class="settings">
+            <div class="settings-item">
+                <label for="chat-isolation">是否低亮不属于自己的会话</label>
+                <label class="switch">
+                    <input type="checkbox" id="chat-isolation">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="usage-card" id="usage-list">
+            <h2>一周内用量信息</h2>
+            <!-- <div class="usage-item">
+                <strong>GPT-4 模型调用次数:</strong>
+                <span id="gpt4-usage">0</span>
+            </div>
+            <div class="usage-item">
+                <strong>GPT-4o 模型调用次数:</strong>
+                <span id="gpt4o-usage">0</span>
+            </div> -->
+            <!-- 可以根据需要添加更多模型 -->
+        </div>
+
+        <div class="usage-card" id="usage-pie">
+            <h2>用量占比信息</h2>
+            <div id="chart-container" style="width: 100%; max-width: 600px;">
+                <canvas id="usageChart"></canvas>
+            </div>
+        </div>
+
+        <button class="change-password-btn" id="change-password-btn">修改密码</button>
+
+        <footer>
+            <p>&copy; 2024 BIT超级共享GPT | 所有权利保留</p>
+        </footer>
+    </div>
+
+    <!-- 修改密码模态窗口 -->
+    <div id="password-modal" class="modal">
+        <div class="modal-content">
+            <h2>修改密码</h2>
+            <div class="input-group">
+                <label for="old-password">旧密码</label>
+                <input type="password" id="old-password" placeholder="请输入旧密码">
+            </div>
+            <div class="input-group">
+                <label for="new-password">新密码</label>
+                <input type="password" id="new-password" placeholder="请输入新密码">
+            </div>
+            <div class="input-group">
+                <label for="confirm-password">确认密码</label>
+                <input type="password" id="confirm-password" placeholder="请再次输入新密码">
+            </div>
+            <div class="buttons">
+                <button class="cancel-btn" id="cancel-btn">取消</button>
+                <button class="confirm-btn" id="confirm-btn">确认</button>
+            </div>
+            <div class="message" id="password-message"></div>
+        </div>
+    </div>
+    <script src="../js/chart.min.js"></script>
+    <script src="../js/user_info.js"></script>
+</body>
+
+</html>

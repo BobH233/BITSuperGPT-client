@@ -1,0 +1,323 @@
+/* 基础样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #333;
+    line-height: 1.6;
+    font-size: 16px;
+    padding: 20px;
+}
+
+/* 主容器 */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1a73e8;
+    background: linear-gradient(45deg, #ff9a8b, #ff6a88, #d0a6f0, #4fd4ff, #ff6c70);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.header p {
+    font-size: 18px;
+    color: #555;
+}
+
+/* 用户信息卡 */
+.user-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.user-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #1a73e8;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 20px;
+}
+
+.username {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* 设置选项 */
+.settings {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+.settings-item:last-child {
+    margin-bottom: 0;
+}
+
+.settings-item label {
+    font-size: 16px;
+    color: #555;
+}
+
+/* 切换按钮 */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #1a73e8;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* 模型用量信息 */
+.usage-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.usage-card h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.usage-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.usage-item strong {
+    font-weight: 500;
+    color: #555;
+}
+
+.usage-item span {
+    font-weight: 600;
+    color: #1a73e8;
+}
+
+/* 修改密码按钮 */
+.change-password-btn {
+    display: block;
+    width: 100%;
+    max-width: 280px;
+    margin: 20px auto 0;
+    padding: 10px;
+    background: linear-gradient(45deg, #ff9a8b, #ff6a88, #d0a6f0, #4fd4ff, #ff6c70);
+    background-size: 200% 200%; /* 设置渐变背景更大的尺寸，用于动画 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.change-password-btn:hover {
+    background-position: 100% 0;
+}
+
+/* 页脚 */
+footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 14px;
+    color: #777;
+}
+
+footer p {
+    font-weight: 400;
+}
+
+footer p a {
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+/* 模态窗口样式 */
+.modal {
+    display: none; /* 隐藏 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.modal-content .input-group {
+    margin-bottom: 15px;
+    width: 100%;
+    text-align: left;
+}
+
+.modal-content .input-group label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.modal-content .input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.modal-content .buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-content .buttons button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.modal-content .buttons .cancel-btn {
+    background-color: #ccc;
+    color: #333;
+}
+
+.modal-content .buttons .confirm-btn {
+    background-color: #1a73e8;
+    color: white;
+}
+
+.message {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+    color: green;
+    display: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+    .user-avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .header p {
+        font-size: 16px;
+    }
+}
+
+#usage-pie {
+    margin-top: 20px;
+}
+
+#usageChart {
+    width: 100% !important;
+    height: auto !important;
+}

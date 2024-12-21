@@ -1,0 +1,95 @@
+{
+  "name": "my-chatgpt-share-app",
+  "version": "1.0.4",
+  "main": "main.js",
+  "description": "BIT超级共享GPT",
+  "author": "BobH",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "npm run pack_js && electron-builder --windows",
+    "build:mac": "npm run pack_js && electron-builder --mac",
+    "build:all": "npm run pack_js && electron-builder --all",
+    "pack_js": "npx webpack --config webpack.config.js --mode production"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "asar": "^3.2.0",
+    "babel-loader": "^9.2.1",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "javascript-obfuscator": "^4.1.1",
+    "webpack": "^5.97.1",
+    "webpack-cli": "latest",
+    "webpack-node-externals": "^3.0.0",
+    "webpack-obfuscator": "^3.5.1"
+  },
+  "build": {
+    "appId": "cn.zendee.bobh.chatgpt",
+    "productName": "BIT超级共享GPT",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "preload.js",
+      "package.json",
+      "node_modules/**/*",
+      "resources/**/*",
+      {
+        "from": "webpacked/",
+        "to": "./",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "extraFiles": [
+      {
+        "from": "sing-box/sing-box.exe",
+        "to": "sing-box/sing-box.exe"
+      },
+      {
+        "from": "sing-box/sing-box-macos",
+        "to": "sing-box/sing-box-macos"
+      },
+      {
+        "from": "sing-box/config.json",
+        "to": "sing-box/config.json"
+      }
+    ],
+    "win": {
+      "icon": "resources/image/logo.ico",
+      "target": [
+        {
+          "target": "dir",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "mac": {
+      "icon": "resources/image/logo.icns",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "identity": null
+    },
+    "portable": {
+      "artifactName": "${productName}-v${version}-portable.${ext}"
+    }
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "electron-store": "^7.0.0"
+  }
+}
