@@ -2,6 +2,24 @@
 
 一个能够在本地共享Plus账号，避免OpenAI标记降智前提下，使用原生网页版ChatGPT Plus的项目
 
+## 截图预览
+
+| ![登录界面](./image/1.png) |
+|:--:|
+| _登录界面_ |
+
+| ![ChatGPT界面](./image/2.png) |
+|:--:|
+| _原生ChatGPT界面_ |
+
+| ![一键登录界面](./image/4.png) |
+|:--:|
+| _一键登录界面_ |
+
+| ![用量统计界面](./image/3.png) |
+|:--:|
+| _用量统计界面_ |
+
 ## 什么原理？
 
 这个项目一句话概括，是：一个自带可配置代理服务器的，指定代理服务器只能访问ChatGPT的，代理服务器终端IP是绿色稳定未被OpenAI封禁的，注入了一些自定义js脚本的本地特制浏览器。
@@ -112,6 +130,6 @@ npm run build:mac
 
 感谢**何同学**警醒我在引用别人的包的时候，要记得在README注明出处
 
-本项目引用的 `resources/injections/chatgpt_detection.js` 源代码用于监控ChatGPT的ip质量，来源于油猴脚本：[hatGPT降智风险检测✅（优化版）](https://greasyfork.org/zh-CN/scripts/517439-chatgpt%E9%99%8D%E6%99%BA%E9%A3%8E%E9%99%A9%E6%A3%80%E6%B5%8B-%E4%BC%98%E5%8C%96%E7%89%88)
+本项目引用的 `resources/injections/chatgpt_detection.js` 源代码用于监控ChatGPT的ip质量，来源于油猴脚本：[ChatGPT降智风险检测✅（优化版）](https://greasyfork.org/zh-CN/scripts/517439-chatgpt%E9%99%8D%E6%99%BA%E9%A3%8E%E9%99%A9%E6%A3%80%E6%B5%8B-%E4%BC%98%E5%8C%96%E7%89%88)
 
 特别感谢ChatGPT给我写出了能够共享使用ChatGPT的代码
