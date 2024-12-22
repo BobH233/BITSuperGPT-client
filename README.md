@@ -88,7 +88,7 @@ API_BASE_URL=<你搭建的后端服务器http(s)地址(例: https://mydomain.com
 ENCRYPTION_KEY=<你在后端配置的加密密匙，注意必须是32位长度字符串>
 ```
 
-然后编辑 `sing-box/config.json` 里面的 `outbounds`一栏，根据你自己搭建的拥有绿色IP的服务器上sing-box的配置情况而定，至于怎么配置sing-box，请参考google上官方文档，在这里不可以赘述过多。
+然后参考 `sing-box/config.demo.json`，编写 `sing-box/config.json`，在里面的 `outbounds`一栏，根据你自己搭建的拥有绿色IP的服务器上sing-box的配置情况而定，至于怎么配置sing-box，请参考google上官方文档，在这里不可以赘述过多。
 
 ## 运行项目
 
