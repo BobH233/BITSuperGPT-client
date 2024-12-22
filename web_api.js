@@ -1,6 +1,9 @@
 // web_api.js
 
-require('dotenv').config();
+const path = require('path');
+const dotenvPath = path.join(__dirname, '.env');
+require('dotenv').config({ path: dotenvPath });
+console.log("process.env.API_BASE_URL:", process.env.API_BASE_URL);
 const axios = require('axios');
 const crypto = require('crypto');
 const Store = require('electron-store').default;
