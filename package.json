@@ -83,6 +83,13 @@
       ],
       "identity": null
     },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
     "portable": {
       "artifactName": "${productName}-v${version}-portable.${ext}"
     }
