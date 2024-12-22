@@ -224,6 +224,15 @@ const menu_options = [
       },
       { type: "separator" },
       {
+        label: '窗口置顶',
+        type: 'checkbox',
+        checked: false,
+        click: (menuItem) => {
+          const isAlwaysOnTop = menuItem.checked;
+          mainWindow.setAlwaysOnTop(isAlwaysOnTop);
+        },
+      },
+      {
         label: "退出程序",
         click() {
           singBoxProcess.kill();
