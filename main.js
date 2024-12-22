@@ -158,9 +158,39 @@ function isSingBoxRunning() {
   return false;
 }
 
+function killSingBox() {
+  if (process.platform === "win32") { // 检测是否是 Windows 系统
+    if (singBoxProcess && singBoxProcess.pid) {
+      // 使用 taskkill 命令杀死进程
+      const { exec } = require("child_process");
+      exec(`taskkill /PID ${singBoxProcess.pid} /T /F`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Failed to kill process: ${error.message}`);
+        } else {
+          console.log("Process killed successfully");
+        }
+      });
+    } else {
+      console.warn("singBoxProcess is not running or already killed.");
+    }
+  } else {
+    // 非 Windows 系统，使用标准的 process.kill 方法
+    if (singBoxProcess && singBoxProcess.pid) {
+      try {
+        singBoxProcess.kill();
+        console.log("Process killed successfully on non-Windows platform.");
+      } catch (err) {
+        console.error(`Failed to kill process: ${err.message}`);
+      }
+    } else {
+      console.warn("singBoxProcess is not running or already killed.");
+    }
+  }
+}
+
 function restartSingBox() {
   if (singBoxProcess) {
-    singBoxProcess.kill(); // 结束当前的 sing-box 进程
+    killSingBox();
     console.log("sing-box process killed, restarting...");
   }
   startSingBox(); // 重新启动 sing-box 进程
@@ -235,7 +265,7 @@ const menu_options = [
       {
         label: "退出程序",
         click() {
-          singBoxProcess.kill();
+          killSingBox();
           app.quit();
         },
       },
@@ -433,7 +463,7 @@ function getUserPreferences() {
 
 function relaunchAPP() {
   app.relaunch();
-  singBoxProcess.kill();
+  killSingBox();
   app.quit();
 }
 
@@ -678,22 +708,20 @@ app.whenReady().then(() => {
 
   app.on("window-all-closed", function () {
     if (process.platform !== "darwin") {
-      singBoxProcess.kill();
+      killSingBox();
       app.quit();
     }
   });
 
   app.on("before-quit", () => {
     if (singBoxProcess) {
-      singBoxProcess.kill();
-      singBoxProcess = null;
+      killSingBox();
     }
   });
 
   app.on("will-quit", () => {
     if (singBoxProcess) {
-      singBoxProcess.kill();
-      singBoxProcess = null;
+      killSingBox();
     }
   });
 });
