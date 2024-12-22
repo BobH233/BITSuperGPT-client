@@ -134,3 +134,7 @@ cache.db
 webpacked/
 
 .DS_Store
+
+
+sing-box/config.json
+
