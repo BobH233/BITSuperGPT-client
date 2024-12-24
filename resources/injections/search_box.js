@@ -23,6 +23,7 @@
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 3px;
+            color: black;
         }
         #custom-search-box button {
             padding: 8px 12px;
