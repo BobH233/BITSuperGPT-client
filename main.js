@@ -110,7 +110,7 @@ function startSingBox() {
 
   if (process.platform === "win32") {
     // 直接运行 sing-box.exe
-    singBoxProcess = spawn(singBoxPath, args, { shell: true });
+    singBoxProcess = spawn(singBoxPath, args, { shell: false });
 
     singBoxProcess.stdout.on("data", (data) => {
       console.log(`sing-box stdout: ${data}`);
@@ -128,7 +128,7 @@ function startSingBox() {
     console.log("singBoxPath (macOS)", singBoxPath);
     console.log("configPath", configPath);
 
-    singBoxProcess = spawn(singBoxPath, args, { shell: true });
+    singBoxProcess = spawn(singBoxPath, args, { shell: false });
 
     singBoxProcess.stdout.on("data", (data) => {
       console.log(`sing-box stdout: ${data}`);
