@@ -230,8 +230,18 @@ const menu_options = [
       { type: "separator" },
       {
         label: "回到ChatGPT主页",
-        click() {
-          mainWindow.loadURL("https://chatgpt.com/");
+        click: async function () {
+          const isLogin = await checkLogin();
+          if (isLogin.loggedIn) {
+            mainWindow.loadURL("https://chatgpt.com/");
+          } else {
+            await dialog.showMessageBox(mainWindow, {
+              type: "info",
+              title: "你还没有登陆",
+              message: "请登陆后再查看用户信息",
+              buttons: ["确认"],
+            });
+          }
         },
       },
       {
