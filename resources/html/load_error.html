@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加载页面失败</title>
+    <link rel="stylesheet" href="../css/load_error.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>加载页面失败</h1>
+            <p>无法加载您请求的页面</p>
+        </div>
+
+        <div class="error-card">
+            <h2>请求失败</h2>
+            
+            <!-- 修改后的请求 URL 显示部分 -->
+            <div class="info-item">
+                <strong>请求的 URL:</strong>
+                <span id="failed-url">加载中...</span>
+            </div>
+
+            <div class="info-item">
+                <strong>错误信息:</strong>
+                <span id="failed-des">加载页面失败，请检查软件代理服务器设置，或者刷新重试。</span>
+            </div>
+            <button class="retry-button" onclick="retryLoad()">刷新重试</button>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 BIT超级共享GPT | 所有权利保留</p>
+        </footer>
+    </div>
+
+    <script src="../js/load_error.js"></script>
+</body>
+
+</html>

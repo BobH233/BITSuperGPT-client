@@ -592,6 +592,10 @@ function createWindow() {
       console.error(
         `Failed to load ${validatedURL}: ${errorDescription} (${errorCode})`
       );
+      win.loadFile(
+        path.join(__dirname, "resources/html/load_error.html"),
+        { query: { url: validatedURL, errorDescription } }
+      );
     }
   );
 
