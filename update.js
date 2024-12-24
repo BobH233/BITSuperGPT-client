@@ -52,7 +52,7 @@ function createUpdateWindow() {
     });
 
     updateWindow.loadFile(path.join(__dirname, 'resources', 'html', 'update.html'));
-    updateWindow.webContents.openDevTools();
+    // updateWindow.webContents.openDevTools();
     updateWindow.on('closed', () => {
         updateWindow = null;
     });
