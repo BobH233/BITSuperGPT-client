@@ -14,6 +14,12 @@ const { spawn, exec } = require("child_process");
 const Store = require("electron-store").default;
 const g_store = new Store();
 
+const dotenvPath = path.join(__dirname, '.env');
+require('dotenv').config({ path: dotenvPath });
+
+const update = require('./update.js');
+update.initialize();
+
 app.commandLine.appendSwitch("lang", "zh-CN");
 
 if (process.argv.includes("--remote-debugging-port")) {
@@ -75,6 +81,9 @@ let singBoxProcess = null;
 let sharedPassword = "";
 
 const GLOBAL_DEBUG = !app.isPackaged;
+
+const enable_update_server = process.env.ENABLE_UPDATE_SERVER || "false";
+
 
 function getSingBoxPath() {
   let basePath;
@@ -226,6 +235,13 @@ const menu_options = [
             });
           }
         },
+      },
+      {
+        label: "检查更新",
+        click: function () {
+          update.checkForUpdates();
+        },
+        visible: enable_update_server == "true",
       },
       { type: "separator" },
       {
@@ -724,6 +740,7 @@ app.whenReady().then(() => {
   startSingBox();
 
   mainWindow = createWindow();
+  app.mainWindow = mainWindow;
 
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

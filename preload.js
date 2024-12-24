@@ -4,15 +4,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
     login: async (username, password) => {
         return await ipcRenderer.invoke('login', username, password);
     },
-    
+
     checkLogin: async () => {
         return await ipcRenderer.invoke('check-login');
     },
-    
+
     filterConversation: async (user_id, conversation_ids) => {
         return await ipcRenderer.invoke('filter-conversation', user_id, conversation_ids);
     },
-    
+
     recordUsage: async (model, conversation_id, is_new_conversation) => {
         return await ipcRenderer.invoke('record-usage', model, conversation_id, is_new_conversation);
     },
@@ -44,7 +44,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     revokeUserTokens: async (userId) => {
         return await ipcRenderer.invoke('revoke-user-tokens', userId)
     },
-    
+
     relaunchApp: async () => {
         return await ipcRenderer.invoke('relaunch-app');
     },
@@ -59,5 +59,29 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     getProxyConfig: async () => {
         return await ipcRenderer.invoke('get-proxy-config');
+    },
+
+    startDownload: () => {
+        ipcRenderer.send('start-download');
+    },
+
+    restartApp: () => {
+        ipcRenderer.send('restart-app');
+    },
+
+    onUpdateAvailable: (callback) => {
+        ipcRenderer.on('update-available', (event, version) => callback(version));
+    },
+
+    onUpdateNotAvailable: (callback) => {
+        ipcRenderer.on('update-not-available', callback);
+    },
+
+    onDownloadProgress: (callback) => {
+        ipcRenderer.on('download-progress', (event, progressObj) => callback(progressObj));
+    },
+
+    onUpdateDownloaded: (callback) => {
+        ipcRenderer.on('update-downloaded', callback);
     },
 });

@@ -1,0 +1,252 @@
+<!-- resources/html/update.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>应用更新</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+            padding: 20px;
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1a73e8;
+        }
+
+        .header p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        /* 更新信息卡 */
+        .info-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-card h2 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .info-item strong {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .info-item span {
+            font-weight: 600;
+            color: #1a73e8;
+        }
+
+        /* 进度条容器 */
+        #progress-container {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        #progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #progress {
+            width: 0%;
+            height: 20px;
+            background-color: #4caf50;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+            transition: width 0.3s;
+        }
+
+        /* 按钮样式 */
+        .button-group {
+            text-align: center;
+        }
+
+        .button-group button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button-group button#download-button {
+            background-color: #1a73e8;
+            color: #fff;
+        }
+
+        .button-group button#download-button:hover {
+            background-color: #1558b0;
+        }
+
+        .button-group button#restart-button {
+            background-color: #34a853;
+            color: #fff;
+        }
+
+        .button-group button#restart-button:hover {
+            background-color: #2c8c43;
+        }
+
+        /* 状态文本 */
+        #status {
+            margin-bottom: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        footer p {
+            font-weight: 400;
+        }
+
+        footer p a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>应用更新</h1>
+            <p>BIT超级共享GPT 正在保持最新状态</p>
+        </div>
+
+        <div class="info-card">
+            <h2>更新信息</h2>
+            <div class="info-item">
+                <strong>最新版本:</strong>
+                <span id="latest-version">1.0.0</span>
+            </div>
+            <div class="info-item">
+                <strong>当前状态:</strong>
+                <span id="status">检查中...</span>
+            </div>
+
+            <div id="progress-container">
+                <div id="progress-bar">
+                    <div id="progress">0%</div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="download-button" style="display: none; margin-top: 20px;">开始下载</button>
+                <button id="restart-button" style="display: none;">重启并更新</button>
+            </div>
+        </div>
+
+
+    </div>
+
+    <footer>
+        <p>&copy; 2024 BIT超级共享GPT | 所有权利保留</p>
+    </footer>
+
+    <!-- 引入自定义的 JS 脚本 -->
+    <script>
+        // 使用您提供的 preload.js 中暴露的方法
+        const latestVersionElem = document.getElementById('latest-version');
+        const statusElem = document.getElementById('status');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress');
+        const downloadButton = document.getElementById('download-button');
+        const restartButton = document.getElementById('restart-button');
+
+        // 监听更新可用事件
+        window.electronAPI.onUpdateAvailable((version) => {
+            latestVersionElem.innerText = version;
+            statusElem.innerText = '有新版本可下载';
+            downloadButton.style.display = 'inline-block';
+        });
+
+        // 监听更新不可用事件
+        window.electronAPI.onUpdateNotAvailable(() => {
+            statusElem.innerText = '当前已是最新版本';
+        });
+
+        // 监听下载进度事件
+        window.electronAPI.onDownloadProgress((progressObj) => {
+            progressContainer.style.display = 'block';
+            const percent = Math.round(progressObj.percent);
+            progressBar.style.width = percent + '%';
+            progressBar.innerText = percent + '%';
+        });
+
+        // 监听更新下载完成事件
+        window.electronAPI.onUpdateDownloaded(() => {
+            statusElem.innerText = '更新已下载完成';
+            restartButton.style.display = 'inline-block';
+        });
+
+        // 点击“开始下载”按钮
+        downloadButton.addEventListener('click', () => {
+            window.electronAPI.startDownload();
+            statusElem.innerText = '正在下载更新...';
+            downloadButton.style.display = 'none';
+        });
+
+        // 点击“重启并更新”按钮
+        restartButton.addEventListener('click', () => {
+            window.electronAPI.restartApp();
+        });
+    </script>
+</body>
+
+</html>

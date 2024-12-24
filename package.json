@@ -1,8 +1,8 @@
 {
   "name": "my-chatgpt-share-app",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "main": "main.js",
-  "description": "BIT超级共享GPT",
+  "description": "BITSuperGPT",
   "author": "BobH",
   "license": "MIT",
   "scripts": {
@@ -27,7 +27,7 @@
   },
   "build": {
     "appId": "cn.zendee.bobh.chatgpt",
-    "productName": "BIT超级共享GPT",
+    "productName": "BITSuperGPT",
     "directories": {
       "output": "dist"
     },
@@ -89,8 +89,15 @@
       "allowToChangeInstallationDirectory": true,
       "perMachine": false,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
+      "createStartMenuShortcut": true,
+      "differentialPackage": true
     },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://example.com/updates/"
+      }
+    ],
     "portable": {
       "artifactName": "${productName}-v${version}-portable.${ext}"
     }
@@ -98,6 +105,7 @@
   "dependencies": {
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
-    "electron-store": "^7.0.0"
+    "electron-store": "^7.0.0",
+    "electron-updater": "^5.3.0"
   }
 }

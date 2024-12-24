@@ -6,7 +6,8 @@ module.exports = {
   target: 'electron-main', // 指定为 Electron 主进程
   entry: {
     main: './main.js', // 主进程入口
-    web_api: './web_api.js', // web_api 入口
+    web_api: './web_api.js', // web_api 入口,
+    update: './update.js'
   },
   plugins: [
     new Obfuscator({
