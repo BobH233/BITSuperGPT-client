@@ -151,6 +151,14 @@ function showMessage(message, isSuccess) {
     passwordMessage.style.display = 'block';
 }
 
+function generateDistinctColors(count) {
+    const colors = [];
+    for (let i = 0; i < count; i++) {
+        const hue = (i * (360 / count)) % 360; // 均匀分布在色环上
+        colors.push(`hsl(${hue}, 70%, 60%)`); // 使用固定的饱和度和亮度
+    }
+    return colors;
+}
 
 function generateUsageChart(allUsersUsage, currentUsername) {
     console.log("generateUsageChart", allUsersUsage, currentUsername);
@@ -162,12 +170,17 @@ function generateUsageChart(allUsersUsage, currentUsername) {
 
     // 计算总用量
     const totalUsage = allUsersUsage.reduce((acc, user) => acc + user.usage_count, 0);
+    const distinctColors = generateDistinctColors(allUsersUsage.length);
 
     // 准备数据
     const labels = allUsersUsage.map(user => user.username === currentUsername ? `${user.username}（你）` : user.username);
     const data = allUsersUsage.map(user => user.usage_count);
-    const backgroundColors = allUsersUsage.map(user => user.username === currentUsername ? 'rgba(255, 99, 132, 0.7)' : 'rgba(54, 162, 235, 0.7)');
-    const borderColors = allUsersUsage.map(user => user.username === currentUsername ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)');
+    const backgroundColors = allUsersUsage.map((user, index) => 
+        user.username === currentUsername ? 'rgba(54, 162, 235, 0.7)' : distinctColors[index]
+    );
+    const borderColors = allUsersUsage.map((user, index) => 
+        user.username === currentUsername ? 'rgba(54, 162, 235, 1)' : 'rgba(0, 0, 0, 0.3)'
+    );
 
     // 销毁之前的图表实例（如果存在），以避免重复绘制
     if (window.usageChartInstance) {
