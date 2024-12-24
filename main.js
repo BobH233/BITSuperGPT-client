@@ -408,13 +408,15 @@ async function isCloudFlareVerifyPage() {
 }
 
 function createProxyInformationWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  const actualWidth = Math.min(800, width * 0.8);
   if (proxyInfoWindow && !proxyInfoWindow.isDestroyed()) {
     proxyInfoWindow.focus();
     return;
   }
   proxyInfoWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: actualWidth,
+    height: actualWidth * (600.0 / 800.0),
     resizable: false,
     autoHideMenuBar: true,
     parent: mainWindow,
@@ -479,13 +481,15 @@ ipcMain.handle("relaunch-app", () => {
 });
 
 function createAboutWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  const actualWidth = Math.min(800, width * 0.8);
   if (aboutWindow && !aboutWindow.isDestroyed()) {
     aboutWindow.focus();
     return;
   }
   aboutWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: actualWidth,
+    height: actualWidth * (600.0 / 800.0),
     resizable: false,
     autoHideMenuBar: true,
     parent: mainWindow,
@@ -509,13 +513,17 @@ ipcMain.handle("get-exe-info", () => {
 });
 
 function createUserInfoWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  const actualHeight = Math.min(900, height * 0.8);
+  console.log("actualHeight", actualHeight);
+  console.log(actualHeight * (600.0 / 900.0));
   if (userInfoWindow && !userInfoWindow.isDestroyed()) {
     userInfoWindow.focus();
     return;
   }
   userInfoWindow = new BrowserWindow({
-    width: 600,
-    height: 900,
+    width: actualHeight * (600.0 / 900.0),
+    height: actualHeight,
     resizable: false,
     autoHideMenuBar: true,
     parent: mainWindow,
