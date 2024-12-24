@@ -705,6 +705,7 @@ function createWindow() {
 
         if (currentURL.startsWith("https://chatgpt.com/")) {
             await injectJSCode(win, "hijack_chatgpt_web_content.js");
+            await injectJSCode(win, "search_box.js");
             await injectJSCode(win, "chatgpt_usage_hook.js");
             // 防止没注入进去
             await injectIsolationHookIfEnabled();
