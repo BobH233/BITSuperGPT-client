@@ -600,6 +600,7 @@ function createWindow() {
       console.error(
         `Failed to load ${validatedURL}: ${errorDescription} (${errorCode})`
       );
+      if(validatedURL == "about:srcdoc") return;
       win.loadFile(
         path.join(__dirname, "resources/html/load_error.html"),
         { query: { url: validatedURL, errorDescription } }
