@@ -71,7 +71,10 @@
       if (parentLi) {
         let chatId = findChatIdOfLi(parentLi);
         if (chatId) {
-          chatId = chatId.replace("/c/", "");
+          // chatId = chatId.replace("/c/", "");
+          const parts = chatId.split('/');
+          chatId = parts[parts.length - 1];
+
           if (!window.isolationIdCache.has(chatId)) {
             hideLi(parentLi);
           }
