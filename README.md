@@ -86,6 +86,15 @@ cnpm install
 API_BASE_URL=<你搭建的后端服务器http(s)地址(例: https://mydomain.com/api)>
 
 ENCRYPTION_KEY=<你在后端配置的加密密匙，注意必须是32位长度字符串>
+
+# 是否启用自动检查更新服务（用的是electron-updater,不懂就填false）
+ENABLE_UPDATE_SERVER=true
+
+# macos自动更新服务接口（用的是electron-updater,不懂就填false）
+UPDATE_SERVER_URL_macos=http://example.com/updates/mac/
+
+# windows自动更新服务接口（用的是electron-updater,不懂就填false）
+UPDATE_SERVER_URL_windows=http://example.com/updates/win/
 ```
 
 然后参考 `sing-box/config.demo.json`，编写 `sing-box/config.json`，在里面的 `outbounds`一栏，根据你自己搭建的拥有绿色IP的服务器上sing-box的配置情况而定，至于怎么配置sing-box，请参考google上官方文档，在这里不可以赘述过多。
