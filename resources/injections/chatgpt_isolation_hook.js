@@ -74,9 +74,10 @@
                     // chatId = chatId.replace("/c/", "");
                     const parts = chatId.split('/');
                     chatId = parts[parts.length - 1];
-
-                    if (!window.isolationIdCache.has(chatId)) {
-                        hideLi(parentLi);
+                    if (parts.length - 2 >= 0 && parts[parts.length - 2] == "c") {
+                        if (!window.isolationIdCache.has(chatId)) {
+                            hideLi(parentLi);
+                        }
                     }
                 }
             }
