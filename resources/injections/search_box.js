@@ -16,22 +16,42 @@
             display: none; /* 初始隐藏 */
             border-radius: 5px;
             font-family: Arial, sans-serif;
+            display: flex;
+            flex-wrap: wrap; /* 允许换行 */
+            align-items: center;
+            justify-content: center; /* 水平居中 */
+            max-width: 90%; /* 使搜索框在极窄的页面下自适应 */
+            box-sizing: border-box;
         }
         #custom-search-box input {
-            width: 300px;
+            flex: 1 1 300px; /* 输入框可伸缩，初始宽度300px */
             padding: 8px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 3px;
             color: black;
+            min-width: 150px; /* 最小宽度，防止过窄时变形 */
         }
-        #custom-search-box button {
+        /* 按钮容器 */
+        #buttons-container {
+            display: flex;
+            flex-wrap: nowrap; /* 按钮不换行，整体换行 */
+            justify-content: center; /* 居中对齐 */
+            margin-left: 10px;
+            margin-top: 0; /* 初始无上边距 */
+            margin-top: 20px;
+        }
+        #buttons-container button {
             padding: 8px 12px;
             font-size: 16px;
             margin-left: 5px;
             border: none;
             border-radius: 3px;
             cursor: pointer;
+            flex: 0 0 auto; /* 按钮不伸缩 */
+        }
+        #buttons-container button:first-child {
+            margin-left: 0; /* 第一个按钮不需要左边距 */
         }
         #search-button {
             background-color: #28a745;
@@ -52,18 +72,42 @@
         .current-highlight {
             background-color: orange;
         }
+
+        /* 响应式调整 */
+        @media (max-width: 600px) {
+            #custom-search-box {
+                flex-direction: column; /* 纵向排列 */
+                align-items: stretch; /* 子元素拉伸以适应宽度 */
+            }
+            #buttons-container {
+                width: 100%;
+                justify-content: center;
+                margin-left: 0;
+                margin-top: 10px; /* 当换行时，按钮容器有上边距 */
+            }
+            #buttons-container button {
+                flex: 1 1 auto; /* 按钮可以伸缩 */
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+        }
     `;
     document.head.appendChild(style);
 
     // 创建搜索框容器
     const searchBox = document.createElement('div');
     searchBox.id = 'custom-search-box';
+    searchBox.style.display = "none";
 
     // 创建输入框
     const searchInput = document.createElement('input');
     searchInput.type = 'text';
     searchInput.id = 'search-input';
     searchInput.placeholder = '输入搜索内容...';
+
+    // 创建按钮容器
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.id = 'buttons-container';
 
     // 创建按钮
     const searchButton = document.createElement('button');
@@ -82,12 +126,15 @@
     closeButton.id = 'close-button';
     closeButton.textContent = '关闭';
 
-    // 将元素添加到搜索框容器
+    // 将按钮添加到按钮容器
+    buttonsContainer.appendChild(searchButton);
+    buttonsContainer.appendChild(prevButton);
+    buttonsContainer.appendChild(nextButton);
+    buttonsContainer.appendChild(closeButton);
+
+    // 将输入框和按钮容器添加到搜索框容器
     searchBox.appendChild(searchInput);
-    searchBox.appendChild(searchButton);
-    searchBox.appendChild(prevButton);
-    searchBox.appendChild(nextButton);
-    searchBox.appendChild(closeButton);
+    searchBox.appendChild(buttonsContainer);
 
     // 将搜索框添加到body
     document.body.appendChild(searchBox);
@@ -100,7 +147,7 @@
 
     // 显示搜索框
     function showSearchBox() {
-        searchBox.style.display = 'block';
+        searchBox.style.display = 'flex';
         searchInput.focus();
     }
 
