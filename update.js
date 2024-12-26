@@ -18,11 +18,13 @@ function setFeedURL() {
             provider: 'generic',
             url: UPDATE_SERVER_URL_macos,
         });
+        console.log("FeedURL:", UPDATE_SERVER_URL_macos);
     } else if (os.platform() === 'win32') {
         autoUpdater.setFeedURL({
             provider: 'generic',
             url: UPDATE_SERVER_URL_windows
         });
+        console.log("FeedURL:", UPDATE_SERVER_URL_windows);
     } else {
         console.warn('Unsupported platform for auto-updates');
     }
