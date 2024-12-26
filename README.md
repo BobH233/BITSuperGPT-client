@@ -2,6 +2,8 @@
 
 一个能够在本地共享Plus账号，避免OpenAI标记降智前提下，使用原生网页版ChatGPT Plus的项目
 
+[![Star History Chart](https://api.star-history.com/svg?repos=BobH233/BITSuperGPT-client&type=Date)](https://star-history.com/#BobH233/BITSuperGPT-client&Date)
+
 ## 截图预览
 
 | ![登录界面](./image/1.png) |
