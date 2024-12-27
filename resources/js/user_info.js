@@ -19,10 +19,11 @@ const currentUserPreference = {
     chatIsolation: true
 }
 
-function processAndShowAllUserUsage(allUsage, selfId) {
+function processAndShowAllUserUsage(allUsage, selfId, selfGroup) {
     let nickNameMap = {};
     let totalCountMap = {};
     for (let usage of allUsage) {
+        if(usage.userGroup != selfGroup) continue; // 跳过其他用户组
         nickNameMap[usage.user_id] = usage.nickname;
         if (totalCountMap[usage.user_id] == undefined) {
             totalCountMap[usage.user_id] = 0;
@@ -64,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
     if (allUserUsage.success) {
-        processAndShowAllUserUsage(allUserUsage.usage, userInfo.user.id);
+        processAndShowAllUserUsage(allUserUsage.usage, userInfo.user.id, userInfo.user.user_group);
     }
     console.log("usage:", userUsage);
     for (let key in userPref) {
