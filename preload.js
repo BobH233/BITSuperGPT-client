@@ -84,4 +84,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
     onUpdateDownloaded: (callback) => {
         ipcRenderer.on('update-downloaded', callback);
     },
+
+    getUsers: async() => {
+        return await ipcRenderer.invoke('get-users');
+    },
+
+    addUser: async(userData) => {
+        return await ipcRenderer.invoke('add-user', userData);
+    }
 });

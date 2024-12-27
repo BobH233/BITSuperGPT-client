@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员后台</title>
+    <!-- 引入Bootstrap CSS（可选，用于更复杂的组件） -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入自定义CSS -->
+    <link rel="stylesheet" href="../css/admin.css">
+    <!-- 引入Chart.js -->
+    <script src="../js/chart.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>管理员后台</h1>
+            <p>管理用户和监控ChatGPT模型使用情况</p>
+        </div>
+
+        <!-- 用户管理部分 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                用户管理
+            </div>
+            <div class="card-body">
+                <!-- 添加用户按钮 -->
+                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addUserModal">添加用户</button>
+                <!-- 用户信息表格 -->
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>用户名</th>
+                                <th>昵称</th>
+                                <th>用户组</th>
+                                <th>是否管理员</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body">
+                            <!-- 动态填充用户数据 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使用量统计部分 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                ChatGPT模型使用量
+            </div>
+            <div class="card-body">
+                <!-- 时间范围选择 -->
+                <div class="mb-3">
+                    <label for="date-range" class="form-label">选择时间范围:</label>
+                    <input type="date" id="start-date" class="form-control d-inline-block w-auto">
+                    <span>至</span>
+                    <input type="date" id="end-date" class="form-control d-inline-block w-auto">
+                    <button class="btn btn-secondary ms-2" id="update-chart">更新图表</button>
+                </div>
+                <!-- 使用量曲线图 -->
+                <canvas id="usageLineChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 近7日子模型调用次数 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                近7日子模型调用次数
+            </div>
+            <div class="card-body">
+                <canvas id="submodelBarChart"></canvas>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 BIT超级共享GPT | 所有权利保留</p>
+        </footer>
+    </div>
+
+    <!-- 添加用户模态窗口 -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="add-user-form">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addUserModalLabel">添加新用户</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="new-username" class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="new-username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new-password" class="form-label">初始密码</label>
+                            <input type="password" class="form-control" id="new-password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new-nickname" class="form-label">用户昵称</label>
+                            <input type="text" class="form-control" id="new-nickname" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new-usergroup" class="form-label">用户组</label>
+                            <input type="number" class="form-control" id="new-usergroup" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="new-is-admin">
+                            <label class="form-check-label" for="new-is-admin">是否管理员</label>
+                        </div>
+                        <div class="alert alert-success d-none" id="add-user-success">用户添加成功！</div>
+                        <div class="alert alert-danger d-none" id="add-user-error">添加用户失败，请检查输入。</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">添加用户</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入Bootstrap JS（依赖Popper.js） -->
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- 引入自定义JS -->
+    <script src="../js/admin.js"></script>
+</body>
+
+</html>

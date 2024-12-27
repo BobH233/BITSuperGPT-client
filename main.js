@@ -238,6 +238,22 @@ const menu_options = [
                 },
             },
             {
+                label: "后台管理",
+                click: async function () {
+                    const isLogin = await checkLogin();
+                    if (isLogin.user.is_admin == 1) {
+                        createAdminWindow();
+                    } else {
+                        await dialog.showMessageBox(mainWindow, {
+                            type: "warning",
+                            title: "你不是管理员",
+                            message: "非管理员无法使用后台管理功能",
+                            buttons: ["确认"],
+                        });
+                    }
+                },
+            },
+            {
                 label: "自动更新",
                 click: function () {
                     if (process.platform === 'win32') {
@@ -575,6 +591,33 @@ function createUserInfoWindow() {
     if (GLOBAL_DEBUG) userInfoWindow.webContents.openDevTools();
     userInfoWindow.on("closed", () => {
         userInfoWindow = null;
+    });
+}
+
+function createAdminWindow() {
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+    const actualWidth = Math.round(Math.min(1400, width * 0.8));
+    if (proxyInfoWindow && !proxyInfoWindow.isDestroyed()) {
+        proxyInfoWindow.focus();
+        return;
+    }
+    proxyInfoWindow = new BrowserWindow({
+        width: actualWidth,
+        height: Math.round(actualWidth * (600.0 / 800.0)),
+        autoHideMenuBar: true,
+        parent: mainWindow,
+        webPreferences: {
+            preload: path.join(__dirname, "preload.js"),
+            nodeIntegration: false,
+            contextIsolation: true,
+        },
+    });
+    proxyInfoWindow.loadFile(
+        path.join(__dirname, "resources/html/admin.html")
+    );
+    if (GLOBAL_DEBUG) proxyInfoWindow.webContents.openDevTools();
+    proxyInfoWindow.on("closed", () => {
+        proxyInfoWindow = null;
     });
 }
 

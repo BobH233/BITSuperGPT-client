@@ -424,6 +424,90 @@ async function getAllUsersUsage(start_time, end_time) {
     }
 }
 
+/**
+ * 获取所有用户信息（仅管理员可调用）
+ * @returns {object} - { success: boolean, users?: array, message?: string }
+ */
+async function getUsers() {
+    const store = g_store;
+    const token = store.get('jwt_token');
+    if (!token) {
+        return { success: false, message: '未登录。' };
+    }
+
+    try {
+        const response = await axios.get(`${API_BASE_URL}/auth/users`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const { users } = response.data;
+        if (!users) {
+            return { success: false, message: '未收到用户数据。' };
+        }
+
+        return { success: true, users };
+    } catch (error) {
+        console.error('获取所有用户信息错误:', error.response ? error.response.data : error.message);
+        return { success: false, message: error.response ? error.response.data.message : error.message };
+    }
+}
+
+/**
+ * 添加新用户（仅管理员可调用）
+ * @param {object} userData - 包含新用户信息的对象
+ * @param {string} userData.username - 用户名
+ * @param {string} userData.password - 密码
+ * @param {string} userData.nickname - 昵称
+ * @param {boolean} userData.is_admin - 是否为管理员
+ * @param {number} userData.userGroup - 用户组
+ * @returns {object} - { success: boolean, user_id?: number, message?: string }
+ */
+async function addUser({ username, password, nickname, is_admin, userGroup }) {
+    const store = g_store;
+    const token = store.get('jwt_token');
+    if (!token) {
+        return { success: false, message: '未登录。' };
+    }
+
+    // 验证必填字段
+    if (!username || !password || !nickname || userGroup === undefined) {
+        return { success: false, message: '用户名、密码、昵称和用户组为必填项。' };
+    }
+
+    try {
+        const data = JSON.stringify({
+            username,
+            password,
+            nickname,
+            is_admin,
+            userGroup
+        });
+
+        const response = await axios.post(`${API_BASE_URL}/auth/add-user`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            validateStatus: function (status) {
+                return status >= 100 && status < 600; // 接受所有状态码
+            }
+        });
+
+        if (response.status === 201) {
+            const { user_id } = response.data;
+            return { success: true, user_id, message: '用户添加成功。' };
+        } else {
+            const { message } = response.data;
+            return { success: false, message: message || '添加用户失败。' };
+        }
+    } catch (error) {
+        console.error("调用 'addUser' 接口时出错:", error);
+        return { success: false, message: '请求失败，请稍后再试。' };
+    }
+}
+
 async function registerIpcForApp(ipcMain) {
     ipcMain.handle('login', async (event, username, password) => {
         return await login(username, password);
@@ -463,6 +547,14 @@ async function registerIpcForApp(ipcMain) {
 
     ipcMain.handle('get-proxy-config', async () => {
         return await getConfig();
+    });
+
+    ipcMain.handle('get-users', async (event) => {
+        return await getUsers();
+    });
+
+    ipcMain.handle('add-user', async (event, userData) => {
+        return await addUser(userData);
     });
 
     ipcMain.handle('debug', async (event, a, b) => {

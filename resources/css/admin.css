@@ -1,0 +1,114 @@
+/* 基础样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #333;
+    line-height: 1.6;
+    font-size: 16px;
+    padding: 20px;
+}
+
+/* 主容器 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 头部 */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1a73e8;
+    background: linear-gradient(45deg, #ff9a8b, #ff6a88, #d0a6f0, #4fd4ff, #ff6c70);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.header p {
+    font-size: 18px;
+    color: #555;
+}
+
+/* 卡片样式 */
+.card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 表格样式 */
+.table th, .table td {
+    vertical-align: middle;
+}
+
+/* 页脚 */
+footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 14px;
+    color: #777;
+}
+
+footer p {
+    font-weight: 400;
+}
+
+footer p a {
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+/* 模态窗口样式 */
+.modal-content {
+    border-radius: 8px;
+}
+
+.modal-header {
+    background: #f4f7fb;
+    border-bottom: none;
+}
+
+.modal-title {
+    color: #333;
+}
+
+.btn-primary {
+    background: #1a73e8;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #4d93ed;
+}
+
+.btn-secondary {
+    background-color: #ccc;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #999;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .header p {
+        font-size: 16px;
+    }
+}
