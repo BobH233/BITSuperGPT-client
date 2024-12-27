@@ -43,6 +43,7 @@ function processAndShowAllUserUsage(allUsage, selfId) {
 // 页面加载后初始化数据
 document.addEventListener('DOMContentLoaded', async () => {
     const userInfo = await window.electronAPI.checkLogin();
+    console.log("userInfo", userInfo);
     const userPref = await window.electronAPI.getUserPreferences();
     const userUsage = await window.electronAPI.getUserUsage(userInfo.user.id, startTime, endTime);
     const allUserUsage = await window.electronAPI.getAllUsersUsage(startTime, endTime);
@@ -77,7 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     currentUser.username = user.nickname;
 
     // 设置用户名
-    document.getElementById('username').innerText = currentUser.username;
+    document.getElementById('username').innerHTML = `${currentUser.username}<sup style="color: rgba(54, 162, 235, 1);">${userInfo.user.user_group ?? "未知用户组"}</sup>`;
 
     // 设置用户头像
     document.getElementById('user-avatar').style.backgroundImage = `url('${currentUser.avatarUrl}')`;
