@@ -541,6 +541,46 @@ async function addUser({ username, password, nickname, is_admin, userGroup }) {
     }
 }
 
+/**
+ * 删除用户（仅管理员可调用）
+ * @param {number} userId - 要删除的用户ID
+ * @returns {object} - { success: boolean, message?: string }
+ */
+async function deleteUser(userId) {
+    const store = g_store;
+    const token = store.get('jwt_token');
+    if (!token) {
+        return { success: false, message: '未登录。' };
+    }
+
+    if (!userId) {
+        return { success: false, message: '用户ID为必填项。' };
+    }
+
+    try {
+        const response = await axios.post(`${API_BASE_URL}/auth/delete-user/${userId}`, [], {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            validateStatus: function (status) {
+                return status >= 100 && status < 600; // 接受所有状态码
+            }
+        });
+
+        if (response.status === 200 && response.data.success) {
+            return { success: true, message: '用户已成功删除。' };
+        } else {
+            const { message } = response.data;
+            return { success: false, message: message || '删除用户失败。' };
+        }
+    } catch (error) {
+        console.error("调用 'deleteUser' 接口时出错:", error.response ? error.response.data : error.message);
+        return { success: false, message: '请求失败，请稍后再试。' };
+    }
+}
+
+
 async function registerIpcForApp(ipcMain) {
     ipcMain.handle('login', async (event, username, password) => {
         return await login(username, password);
@@ -592,6 +632,10 @@ async function registerIpcForApp(ipcMain) {
 
     ipcMain.handle('add-user', async (event, userData) => {
         return await addUser(userData);
+    });
+
+    ipcMain.handle('delete-user', async (event, userId) => {
+        return await deleteUser(userId);
     });
 
     ipcMain.handle('debug', async (event, a, b) => {

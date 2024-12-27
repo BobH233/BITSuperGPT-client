@@ -20,8 +20,35 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>${user.nickname}</td>
                 <td>${user.userGroup}</td>
                 <td>${user.is_admin ? '是' : '否'}</td>
+                <td><button class="btn btn-danger btn-sm delete-user-btn" data-user-id="${user.id}">删除</button></td>
             `;
             tableBody.appendChild(tr);
+        });
+
+        const deleteButtons = document.querySelectorAll('.delete-user-btn');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const userId = button.getAttribute('data-user-id');
+                const confirmed = confirm('确定要删除该用户吗？');
+                if (confirmed) {
+                    const result = await window.electronAPI.deleteUser(parseInt(userId));
+                    console.log(result);
+                    if (result.success) {
+                        alert('用户已成功删除。');
+                        // 重新获取用户列表
+                        users = await window.electronAPI.getUsers();
+                        if (users.success) {
+                            users = users.users;
+                            populateUserTable();
+                        } else {
+                            alert("重新加载用户列表失败...");
+                        }
+                    } else {
+                        alert(`删除用户失败: ${result.message}`);
+                    }
+                }
+            });
         });
     }
 

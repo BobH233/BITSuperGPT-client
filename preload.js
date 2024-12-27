@@ -95,5 +95,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     addUser: async(userData) => {
         return await ipcRenderer.invoke('add-user', userData);
+    },
+
+    deleteUser: async(userId) => {
+        return await ipcRenderer.invoke('delete-user', userId);
     }
 });
