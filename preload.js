@@ -57,6 +57,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
         return await ipcRenderer.invoke('get-all-users-usage', startTime, endTime);
     },
 
+    getAllUsersUsageDetails: async (startTime, endTime) => {
+        return await ipcRenderer.invoke('get-all-users-usage-details', startTime, endTime);
+    },
+
     getProxyConfig: async () => {
         return await ipcRenderer.invoke('get-proxy-config');
     },

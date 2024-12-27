@@ -425,6 +425,39 @@ async function getAllUsersUsage(start_time, end_time) {
 }
 
 /**
+ * 获取所有用户在某个时间段内对各个模型的详细情况
+ * @param {string} start_time - 查询开始时间 (ISO 8601 格式)
+ * @param {string} end_time - 查询结束时间 (ISO 8601 格式)
+ * @returns {object} - 返回查询结果 { success: boolean, usage?: array, message?: string }
+ */
+async function getAllUsersUsageDetails(start_time, end_time) {
+    const store = g_store;
+    const token = store.get('jwt_token'); // 获取存储中的JWT token
+    if (!token) {
+        return { success: false, message: '未登录。' };
+    }
+
+    try {
+        // 发送 GET 请求到 /all-users-usage 端点
+        const response = await axios.get(`${API_BASE_URL}/usage/all-users-usage-details`, {
+            params: {
+                start_time,
+                end_time
+            },
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+
+        const { usage } = response.data;
+        return { success: true, usage };
+    } catch (error) {
+        console.error('查询所有用户用量情况错误:', error.response ? error.response.data : error.message);
+        return { success: false, message: error.response ? error.response.data.message : error.message };
+    }
+}
+
+/**
  * 获取所有用户信息（仅管理员可调用）
  * @returns {object} - { success: boolean, users?: array, message?: string }
  */
@@ -543,6 +576,10 @@ async function registerIpcForApp(ipcMain) {
 
     ipcMain.handle('get-all-users-usage', async (event, startTime, endTime) => {
         return await getAllUsersUsage(startTime, endTime);
+    });
+
+    ipcMain.handle('get-all-users-usage-details', async (event, startTime, endTime) => {
+        return await getAllUsersUsageDetails(startTime, endTime);
     });
 
     ipcMain.handle('get-proxy-config', async () => {

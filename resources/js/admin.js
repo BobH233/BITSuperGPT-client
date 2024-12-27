@@ -1,8 +1,8 @@
-document.addEventListener('DOMContentLoaded', async() => {
-    // 模拟用户数据
+document.addEventListener('DOMContentLoaded', async () => {
+    // 获取用户数据
     let users = await window.electronAPI.getUsers();
     console.log(users);
-    if(users.success) {
+    if (users.success) {
         users = users.users;
     } else {
         alert("加载用户失败...");
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async() => {
 
     // 处理添加用户表单
     const addUserForm = document.getElementById('add-user-form');
-    addUserForm.addEventListener('submit', async(e) => {
+    addUserForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const username = document.getElementById('new-username').value.trim();
         const password = document.getElementById('new-password').value.trim();
@@ -46,9 +46,9 @@ document.addEventListener('DOMContentLoaded', async() => {
                 userGroup: usergroup
             }
             let addResult = await window.electronAPI.addUser(userData);
-            if(addResult.success) {
+            if (addResult.success) {
                 users = await window.electronAPI.getUsers();
-                if(users.success) {
+                if (users.success) {
                     users = users.users;
                 } else {
                     alert("加载用户失败...");
@@ -59,13 +59,19 @@ document.addEventListener('DOMContentLoaded', async() => {
                 document.getElementById('add-user-error').classList.add('d-none');
                 addUserForm.reset();
                 setTimeout(() => {
-                    const addUserModal = bootstrap.Modal.getInstance(document.getElementById    ('addUserModal'));
+                    const addUserModal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'));
                     addUserModal.hide();
                     document.getElementById('add-user-success').classList.add('d-none');
                 }, 1000);
+            } else {
+                // 显示后端返回的错误消息
+                document.getElementById('add-user-error').textContent = addResult.message || '添加用户失败。';
+                document.getElementById('add-user-error').classList.remove('d-none');
+                document.getElementById('add-user-success').classList.add('d-none');
             }
         } else {
             // 显示错误消息
+            document.getElementById('add-user-error').textContent = '用户名、密码、昵称和用户组为必填项。';
             document.getElementById('add-user-error').classList.remove('d-none');
             document.getElementById('add-user-success').classList.add('d-none');
         }
@@ -94,85 +100,13 @@ document.addEventListener('DOMContentLoaded', async() => {
     document.getElementById('start-date').value = formatDate(sevenDaysAgo);
     document.getElementById('end-date').value = formatDate(today);
 
-    // 模拟使用量数据（默认7天）
-    let usageData = {
-        labels: generateDateLabels(today, 7, 'daily'),
-        total: generateRandomData(7, 500, 1000),
-        submodels: {
-            'GPT-4': generateRandomData(7, 200, 500),
-            'GPT-3.5': generateRandomData(7, 300, 600),
-            'GPT-4o': generateRandomData(7, 100, 300)
-        }
-    };
-
-    // 生成日期标签，根据granularity（'hourly' 或 'daily'）
-    function generateDateLabels(endDate, numPoints, granularity) {
-        const labels = [];
-        if (granularity === 'hourly') {
-            for (let i = 0; i < numPoints; i++) {
-                const d = new Date(endDate);
-                d.setHours(endDate.getHours() - (numPoints - 1 - i));
-                labels.push(`${formatTime(d)}`);
-            }
-        } else { // 'daily'
-            for (let i = numPoints - 1; i >= 0; i--) {
-                const d = new Date(endDate);
-                d.setDate(endDate.getDate() - i);
-                labels.push(`${d.getMonth() + 1}/${d.getDate()}`);
-            }
-        }
-        return labels;
-    }
-
-    // 生成随机数据
-    function generateRandomData(numPoints, min, max) {
-        const data = [];
-        for (let i = 0; i < numPoints; i++) {
-            data.push(Math.floor(Math.random() * (max - min + 1)) + min);
-        }
-        return data;
-    }
-
-    // 初始化使用量曲线图
+    // 初始化使用量折线图
     const ctx = document.getElementById('usageLineChart').getContext('2d');
     let usageLineChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: usageData.labels,
-            datasets: [
-                {
-                    label: '总用量',
-                    data: usageData.total,
-                    borderColor: '#1a73e8',
-                    backgroundColor: 'rgba(26, 115, 232, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                },
-                {
-                    label: 'GPT-4',
-                    data: usageData.submodels['GPT-4'],
-                    borderColor: '#ff6c70',
-                    backgroundColor: 'rgba(255, 108, 112, 0.1)',
-                    fill: false,
-                    tension: 0.4
-                },
-                {
-                    label: 'GPT-3.5',
-                    data: usageData.submodels['GPT-3.5'],
-                    borderColor: '#4fd4ff',
-                    backgroundColor: 'rgba(79, 212, 255, 0.1)',
-                    fill: false,
-                    tension: 0.4
-                },
-                {
-                    label: 'GPT-4o',
-                    data: usageData.submodels['GPT-4o'],
-                    borderColor: '#d0a6f0',
-                    backgroundColor: 'rgba(208, 166, 240, 0.1)',
-                    fill: false,
-                    tension: 0.4
-                }
-            ]
+            labels: [], // 将在 fetchAndPopulateUsageData 中填充
+            datasets: []
         },
         options: {
             responsive: true,
@@ -200,68 +134,19 @@ document.addEventListener('DOMContentLoaded', async() => {
         }
     });
 
-    // 更新图表数据
-    document.getElementById('update-chart').addEventListener('click', () => {
-        const startDateInput = document.getElementById('start-date').value;
-        const endDateInput = document.getElementById('end-date').value;
-        const startDate = new Date(startDateInput);
-        const endDate = new Date(endDateInput);
-
-        if (startDate > endDate) {
-            alert('开始日期不能晚于结束日期');
-            return;
-        }
-
-        // 计算日期差异
-        const timeDiff = endDate - startDate;
-        const dayInMs = 1000 * 60 * 60 * 24;
-        const dayDiff = Math.ceil(timeDiff / dayInMs) + 1;
-
-        let granularity = 'daily';
-        let numPoints = dayDiff;
-        if (dayDiff <= 1) {
-            granularity = 'hourly';
-            numPoints = 24; // 每小时一个点
-        } else if (dayDiff <= 7) {
-            granularity = 'daily';
-            numPoints = dayDiff;
-        } else {
-            granularity = 'daily'; // 你可以根据需要添加更多的粒度选项
-            numPoints = dayDiff;
-        }
-
-        // 生成新的标签和数据
-        const newLabels = generateDateLabels(endDate, numPoints, granularity);
-        const newTotalData = generateRandomData(numPoints, 500, 1000);
-        const newGPT4Data = generateRandomData(numPoints, 200, 500);
-        const newGPT35Data = generateRandomData(numPoints, 300, 600);
-        const newGPT4oData = generateRandomData(numPoints, 100, 300);
-
-        // 更新图表数据
-        usageLineChart.data.labels = newLabels;
-        usageLineChart.data.datasets[0].data = newTotalData;
-        usageLineChart.data.datasets[1].data = newGPT4Data;
-        usageLineChart.data.datasets[2].data = newGPT35Data;
-        usageLineChart.data.datasets[3].data = newGPT4oData;
-        usageLineChart.update();
-    });
-
-    // 初始化近7日子模型调用次数柱状图
-    const submodelData = {
-        labels: ['GPT-4', 'GPT-3.5', 'GPT-4o'],
-        datasets: [
-            {
-                label: '调用次数',
-                data: [350, 500, 150],
-                backgroundColor: ['#ff6c70', '#4fd4ff', '#d0a6f0']
-            }
-        ]
-    };
-
-    const ctxBar = document.getElementById('submodelBarChart').getContext('2d');
-    const submodelBarChart = new Chart(ctxBar, {
+    // 初始化子模型调用次数柱状图
+    const submodelBarChart = new Chart(document.getElementById('submodelBarChart').getContext('2d'), {
         type: 'bar',
-        data: submodelData,
+        data: {
+            labels: [], // 将在 fetchAndPopulateUsageData 中填充
+            datasets: [
+                {
+                    label: '调用次数',
+                    data: [],
+                    backgroundColor: [] // 将在 fetchAndPopulateUsageData 中填充
+                }
+            ]
+        },
         options: {
             responsive: true,
             plugins: {
@@ -288,16 +173,175 @@ document.addEventListener('DOMContentLoaded', async() => {
         }
     });
 
-    // 生成近7日子模型调用次数（模拟数据）
-    function updateSubmodelBarChart() {
-        submodelBarChart.data.datasets[0].data = [
-            Math.floor(Math.random() * 500),
-            Math.floor(Math.random() * 600),
-            Math.floor(Math.random() * 300)
-        ];
-        submodelBarChart.update();
+    // 定义颜色调色板
+    const colorPalette = [
+        '#ff6c70', '#4fd4ff', '#d0a6f0',
+        '#34a853', '#fbbc05', '#ea4335', '#4285f4',
+        '#db4437', '#0f9d58', '#ab47bc', '#00acc1',
+        '#ff7043', '#9ccc65', '#5c6bc0', '#ffca28',
+        '#8e24aa', '#00bcd4', '#ff5722', '#aed581'
+    ];
+    let colorIndex = 0;
+    const modelColorMap = {}; // 用于存储模型与颜色的映射
+
+    // 获取并填充用量数据
+    await fetchAndPopulateUsageData(formatDate(sevenDaysAgo), formatDate(today));
+
+    // 更新图表数据
+    document.getElementById('update-chart').addEventListener('click', async () => {
+        const startDateInput = document.getElementById('start-date').value;
+        const endDateInput = document.getElementById('end-date').value;
+        const startDate = new Date(startDateInput);
+        const endDate = new Date(endDateInput);
+
+        if (startDate > endDate) {
+            alert('开始日期不能晚于结束日期');
+            return;
+        }
+
+        await fetchAndPopulateUsageData(startDateInput, endDateInput);
+    });
+
+    /**
+     * 获取并填充所有用户的用量数据
+     * @param {string} startTime - 查询开始时间 (YYYY-MM-DD)
+     * @param {string} endTime - 查询结束时间 (YYYY-MM-DD)
+     */
+    async function fetchAndPopulateUsageData(startTime, endTime) {
+        try {
+            const isoStartTime = new Date(startTime).toISOString();
+            const isoEndTime = new Date(endTime).toISOString();
+
+            const result = await window.electronAPI.getAllUsersUsageDetails(isoStartTime, isoEndTime);
+            console.log("getAllUsersUsageDetails", result);
+            if (result.success) {
+                const usageDetails = result.usage;
+                // 处理用量数据
+                const aggregatedData = aggregateUsageData(usageDetails, startTime, endTime);
+                // 更新图表
+                updateUsageLineChart(aggregatedData.labels, aggregatedData.datasets);
+                updateSubmodelBarChart(aggregatedData.submodelsTotal);
+            } else {
+                alert(`加载用量数据失败: ${result.message}`);
+            }
+        } catch (error) {
+            console.error('获取用量数据时出错:', error);
+            alert('获取用量数据时出错，请检查控制台日志。');
+        }
     }
 
-    // 每天刷新一次调用次数
-    setInterval(updateSubmodelBarChart, 86400000); // 24小时
+    /**
+     * 聚合用量数据以适应图表显示
+     * @param {array} usageDetails - 后端返回的用量详细数据
+     * @param {string} startDate - 查询开始日期 (YYYY-MM-DD)
+     * @param {string} endDate - 查询结束日期 (YYYY-MM-DD)
+     * @returns {object} - 包含标签、数据集和子模型总用量
+     */
+    function aggregateUsageData(usageDetails, startDate, endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        const dayDiff = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+        const labels = [];
+        const totalUsage = {};
+        const submodelsUsage = {};
+        const submodelsTotal = {};
+
+        // 初始化标签和数据
+        for (let i = 0; i < dayDiff; i++) {
+            const current = new Date(start);
+            current.setDate(start.getDate() + i);
+            const label = `${current.getMonth() + 1}/${current.getDate()}`;
+            labels.push(label);
+            totalUsage[label] = 0;
+        }
+
+        // 动态收集所有模型
+        usageDetails.forEach(entry => {
+            if (!submodelsUsage[entry.model]) {
+                submodelsUsage[entry.model] = {};
+                submodelsTotal[entry.model] = 0;
+            }
+            // Initialize usage count for each date if not present
+            const usageDate = new Date(entry.usage_time);
+            const label = `${usageDate.getMonth() + 1}/${usageDate.getDate()}`;
+            if (!submodelsUsage[entry.model][label]) {
+                submodelsUsage[entry.model][label] = 0;
+            }
+            // 聚合用量数据
+            totalUsage[label] += 1;
+            submodelsUsage[entry.model][label] += 1;
+            submodelsTotal[entry.model] += 1;
+        });
+
+        // 准备图表数据集
+        const datasets = [
+            {
+                label: '总用量',
+                data: [],
+                borderColor: '#1a73e8',
+                backgroundColor: 'rgba(26, 115, 232, 0.1)',
+                fill: true,
+                tension: 0.4
+            }
+        ];
+
+        // 动态添加每个模型的数据集
+        Object.keys(submodelsUsage).forEach(model => {
+            // 如果模型还没有分配颜色，分配一个
+            if (!modelColorMap[model]) {
+                modelColorMap[model] = colorPalette[colorIndex % colorPalette.length];
+                colorIndex++;
+            }
+            const modelColor = modelColorMap[model];
+            const dataset = {
+                label: model,
+                data: [],
+                borderColor: modelColor,
+                backgroundColor: `${modelColor}1A`, // 10%透明度
+                fill: false,
+                tension: 0.4
+            };
+            datasets.push(dataset);
+        });
+
+        // 填充总用量数据和每个模型的数据
+        labels.forEach(label => {
+            datasets[0].data.push(totalUsage[label] || 0);
+            Object.keys(submodelsUsage).forEach(model => {
+                datasets.find(ds => ds.label === model).data.push(submodelsUsage[model][label] || 0);
+            });
+        });
+
+        return {
+            labels,
+            datasets,
+            submodelsTotal
+        };
+    }
+
+    /**
+     * 更新使用量折线图
+     * @param {array} labels - 图表标签
+     * @param {array} datasets - 图表数据集
+     */
+    function updateUsageLineChart(labels, datasets) {
+        usageLineChart.data.labels = labels;
+        usageLineChart.data.datasets = datasets; // 直接替换整个数据集
+        usageLineChart.update();
+    }
+
+    /**
+     * 更新子模型调用次数柱状图
+     * @param {object} submodelsTotal - 子模型总调用次数
+     */
+    function updateSubmodelBarChart(submodelsTotal) {
+        const models = Object.keys(submodelsTotal);
+        const usageCounts = models.map(model => submodelsTotal[model] || 0);
+        const backgroundColors = models.map(model => modelColorMap[model] || '#cccccc');
+
+        submodelBarChart.data.labels = models;
+        submodelBarChart.data.datasets[0].data = usageCounts;
+        submodelBarChart.data.datasets[0].backgroundColor = backgroundColors;
+        submodelBarChart.update();
+    }
 });
