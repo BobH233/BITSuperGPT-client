@@ -237,7 +237,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function fetchAndPopulateUsageData(startTime, endTime) {
         try {
             const isoStartTime = new Date(startTime).toISOString();
-            const isoEndTime = new Date(endTime).toISOString();
+            let endDateObj = new Date(endTime);
+            endDateObj.setHours(23, 59, 59, 999);
+            const isoEndTime = endDateObj.toISOString();
 
             const result = await window.electronAPI.getAllUsersUsageDetails(isoStartTime, isoEndTime);
             console.log("getAllUsersUsageDetails", result);
