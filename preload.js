@@ -99,5 +99,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     deleteUser: async(userId) => {
         return await ipcRenderer.invoke('delete-user', userId);
+    },
+
+    savePDFAs: async() => {
+        return await ipcRenderer.invoke('save-pdf');
     }
 });

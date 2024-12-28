@@ -748,8 +748,9 @@ function createWindow() {
 
         if (currentURL.startsWith("https://chatgpt.com/")) {
             await injectJSCode(win, "hijack_chatgpt_web_content.js");
-            await injectJSCode(win, "search_box.js");
             await injectJSCode(win, "chatgpt_usage_hook.js");
+            await injectJSCode(win, "search_box.js");
+            await injectJSCode(win, "saveAsPDF.js");
             // 防止没注入进去
             await injectIsolationHookIfEnabled();
         } else if (currentURL.startsWith("https://auth.openai.com/authorize?")) {
@@ -787,6 +788,42 @@ function createWindow() {
     return win;
 }
 
+ipcMain.handle('save-pdf', async (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (!win) {
+        return { success: false, message: '未找到窗口' };
+    }
+
+    // 打开保存文件对话框
+    const { canceled, filePath } = await dialog.showSaveDialog(win, {
+        title: '保存 PDF',
+        defaultPath: 'output.pdf',
+        filters: [
+            { name: 'PDF 文件', extensions: ['pdf'] }
+        ]
+    });
+
+    if (canceled) {
+        return { success: false };
+    }
+
+    const pdfOptions = {
+        marginsType: 0,
+        pageSize: 'A4',
+        printBackground: true,
+        printSelectionOnly: false,
+        landscape: false
+    };
+
+    try {
+        const pdfData = await win.webContents.printToPDF(pdfOptions);
+        fs.writeFileSync(filePath, pdfData);
+        return { success: true, filePath };
+    } catch (error) {
+        console.error('生成 PDF 时出错:', error);
+        return { success: false, message: '生成 PDF 时出错' };
+    }
+});
 const menu = Menu.buildFromTemplate(menu_options);
 Menu.setApplicationMenu(menu);
 
