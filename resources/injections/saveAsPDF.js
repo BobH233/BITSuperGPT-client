@@ -87,7 +87,7 @@
             // 调用主进程的保存 PDF 功能
             document.body.style.cursor = 'wait';
             const result = await window.electronAPI.savePDFAs();
-            document.body.style.cursor = 'default';
+            document.body.style.cursor = '';
             
             if (result.success) {
                 console.log('PDF 保存成功，路径:', result.filePath);
