@@ -1,24 +1,24 @@
-(function() {
-    'use strict';
- 
-    // 创建显示框
-    const displayBox = document.createElement('div');
-    displayBox.style.position = 'fixed';
-    displayBox.style.top = '50%';
-    displayBox.style.right = '20px';
-    displayBox.style.transform = 'translateY(-50%)';
-    displayBox.style.width = '220px';
-    displayBox.style.padding = '10px';
-    displayBox.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-    displayBox.style.color = '#fff';
-    displayBox.style.fontSize = '14px';
-    displayBox.style.borderRadius = '8px';
-    displayBox.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
-    displayBox.style.zIndex = '10000';
-    displayBox.style.transition = 'all 0.3s ease';
-    displayBox.style.display = 'none';
- 
-    displayBox.innerHTML = `
+(function () {
+  "use strict";
+
+  // 创建显示框
+  const displayBox = document.createElement("div");
+  displayBox.style.position = "fixed";
+  displayBox.style.top = "50%";
+  displayBox.style.right = "20px";
+  displayBox.style.transform = "translateY(-50%)";
+  displayBox.style.width = "220px";
+  displayBox.style.padding = "10px";
+  displayBox.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+  displayBox.style.color = "#fff";
+  displayBox.style.fontSize = "14px";
+  displayBox.style.borderRadius = "8px";
+  displayBox.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.3)";
+  displayBox.style.zIndex = "10000";
+  displayBox.style.transition = "all 0.3s ease";
+  displayBox.style.display = "none";
+
+  displayBox.innerHTML = `
         <div style="margin-bottom: 10px;">
             <strong>PoW 信息</strong>
         </div>
@@ -51,28 +51,28 @@
         ">
             ChatGPT Degrade Checker
     </div>`;
-    document.body.appendChild(displayBox);
- 
-    // 创建收缩状态的指示器
-    const collapsedIndicator = document.createElement('div');
-    collapsedIndicator.style.position = 'fixed';
-    collapsedIndicator.style.top = '50%';
-    collapsedIndicator.style.right = '20px';
-    collapsedIndicator.style.transform = 'translateY(-50%)';
-    collapsedIndicator.style.width = '32px';
-    collapsedIndicator.style.height = '32px';
-    collapsedIndicator.style.backgroundColor = 'transparent';
-    collapsedIndicator.style.borderRadius = '50%';
-    collapsedIndicator.style.cursor = 'pointer';
-    collapsedIndicator.style.zIndex = '10000';
-    collapsedIndicator.style.padding = '4px';
-    collapsedIndicator.style.display = 'flex';
-    collapsedIndicator.style.alignItems = 'center';
-    collapsedIndicator.style.justifyContent = 'center';
-    collapsedIndicator.style.transition = 'all 0.3s ease';
- 
-    // 使用SVG作为指示器
-    collapsedIndicator.innerHTML = `
+  document.body.appendChild(displayBox);
+
+  // 创建收缩状态的指示器
+  const collapsedIndicator = document.createElement("div");
+  collapsedIndicator.style.position = "fixed";
+  collapsedIndicator.style.top = "50%";
+  collapsedIndicator.style.right = "20px";
+  collapsedIndicator.style.transform = "translateY(-50%)";
+  collapsedIndicator.style.width = "32px";
+  collapsedIndicator.style.height = "32px";
+  collapsedIndicator.style.backgroundColor = "transparent";
+  collapsedIndicator.style.borderRadius = "50%";
+  collapsedIndicator.style.cursor = "pointer";
+  collapsedIndicator.style.zIndex = "10000";
+  collapsedIndicator.style.padding = "4px";
+  collapsedIndicator.style.display = "flex";
+  collapsedIndicator.style.alignItems = "center";
+  collapsedIndicator.style.justifyContent = "center";
+  collapsedIndicator.style.transition = "all 0.3s ease";
+
+  // 使用SVG作为指示器
+  collapsedIndicator.innerHTML = `
     <svg id="status-icon" width="32" height="32" viewBox="0 0 64 64" style="transition: all 0.3s ease;">
         <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -115,140 +115,167 @@
             </circle>
         </g>
     </svg>`;
-    document.body.appendChild(collapsedIndicator);
- 
-    // 鼠标悬停事件
-    collapsedIndicator.addEventListener('mouseenter', function() {
-        displayBox.style.display = 'block';
-        collapsedIndicator.style.opacity = '0';
+  document.body.appendChild(collapsedIndicator);
+
+  // 鼠标悬停事件
+  collapsedIndicator.addEventListener("mouseenter", function () {
+    displayBox.style.display = "block";
+    collapsedIndicator.style.opacity = "0";
+  });
+
+  displayBox.addEventListener("mouseleave", function () {
+    displayBox.style.display = "none";
+    collapsedIndicator.style.opacity = "1";
+  });
+
+  // 创建提示框
+  const tooltip = document.createElement("div");
+  tooltip.id = "tooltip";
+  tooltip.innerText =
+    "这个值越小，代表PoW难度越高，ChatGPT认为你的IP风险越高。";
+  tooltip.style.position = "fixed";
+  tooltip.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+  tooltip.style.color = "#fff";
+  tooltip.style.padding = "8px 12px";
+  tooltip.style.borderRadius = "5px";
+  tooltip.style.fontSize = "12px";
+  tooltip.style.visibility = "hidden";
+  tooltip.style.zIndex = "10001";
+  tooltip.style.width = "240px";
+  tooltip.style.lineHeight = "1.4";
+  tooltip.style.pointerEvents = "none";
+  document.body.appendChild(tooltip);
+
+  // 显示提示
+  document
+    .getElementById("difficulty-tooltip")
+    .addEventListener("mouseenter", function (event) {
+      tooltip.style.visibility = "visible";
+
+      const tooltipWidth = 240;
+      const windowWidth = window.innerWidth;
+      const mouseX = event.clientX;
+      const mouseY = event.clientY;
+
+      let leftPosition = mouseX - tooltipWidth - 10;
+      if (leftPosition < 10) {
+        leftPosition = mouseX + 20;
+      }
+
+      let topPosition = mouseY - 40;
+
+      tooltip.style.left = `${leftPosition}px`;
+      tooltip.style.top = `${topPosition}px`;
     });
- 
-    displayBox.addEventListener('mouseleave', function() {
-        displayBox.style.display = 'none';
-        collapsedIndicator.style.opacity = '1';
+
+  // 隐藏提示
+  document
+    .getElementById("difficulty-tooltip")
+    .addEventListener("mouseleave", function () {
+      tooltip.style.visibility = "hidden";
     });
- 
-    // 创建提示框
-    const tooltip = document.createElement('div');
-    tooltip.id = 'tooltip';
-    tooltip.innerText = '这个值越小，代表PoW难度越高，ChatGPT认为你的IP风险越高。';
-    tooltip.style.position = 'fixed';
-    tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-    tooltip.style.color = '#fff';
-    tooltip.style.padding = '8px 12px';
-    tooltip.style.borderRadius = '5px';
-    tooltip.style.fontSize = '12px';
-    tooltip.style.visibility = 'hidden';
-    tooltip.style.zIndex = '10001';
-    tooltip.style.width = '240px';
-    tooltip.style.lineHeight = '1.4';
-    tooltip.style.pointerEvents = 'none';
-    document.body.appendChild(tooltip);
- 
-    // 显示提示
-    document.getElementById('difficulty-tooltip').addEventListener('mouseenter', function(event) {
-        tooltip.style.visibility = 'visible';
- 
-        const tooltipWidth = 240;
-        const windowWidth = window.innerWidth;
-        const mouseX = event.clientX;
-        const mouseY = event.clientY;
- 
-        let leftPosition = mouseX - tooltipWidth - 10;
-        if (leftPosition < 10) {
-            leftPosition = mouseX + 20;
-        }
- 
-        let topPosition = mouseY - 40;
- 
-        tooltip.style.left = `${leftPosition}px`;
-        tooltip.style.top = `${topPosition}px`;
-    });
- 
-    // 隐藏提示
-    document.getElementById('difficulty-tooltip').addEventListener('mouseleave', function() {
-        tooltip.style.visibility = 'hidden';
-    });
- 
-    // 更新difficulty指示器
-    function updateDifficultyIndicator(difficulty) {
-        const difficultyLevel = document.getElementById('difficulty-level');
-        const ipQuality = document.getElementById('ip-quality');
- 
-        if (difficulty === 'N/A') {
-            setIconColors('#888', '#666');
-            difficultyLevel.innerText = '';
-            ipQuality.innerHTML = 'N/A';
-            return;
-        }
- 
-        const cleanDifficulty = difficulty.replace('0x', '').replace(/^0+/, '');
-        const hexLength = cleanDifficulty.length;
- 
-        let color, secondaryColor, textColor, level, qualityText;
- 
-        if (hexLength <= 2) {
-            color = '#F44336';
-            secondaryColor = '#d32f2f';
-            textColor = '#ff6b6b';
-            level = '(困难)';
-            qualityText = '高风险';
-        } else if (hexLength === 3) {
-            color = '#FFC107';
-            secondaryColor = '#ffa000';
-            textColor = '#ffd700';
-            level = '(中等)';
-            qualityText = '中等';
-        } else if (hexLength === 4) {
-            color = '#8BC34A';
-            secondaryColor = '#689f38';
-            textColor = '#9acd32';
-            level = '(简单)';
-            qualityText = '良好';
-        } else {
-            color = '#4CAF50';
-            secondaryColor = '#388e3c';
-            textColor = '#98fb98';
-            level = '(极易)';
-            qualityText = '优秀';
-        }
- 
-        setIconColors(color, secondaryColor);
-        difficultyLevel.innerHTML = `<span style="color: ${textColor}">${level}</span>`;
-        ipQuality.innerHTML = `<span style="color: ${textColor}">${qualityText}</span>`;
+
+  // 更新difficulty指示器
+  function updateDifficultyIndicator(difficulty) {
+    const difficultyLevel = document.getElementById("difficulty-level");
+    const ipQuality = document.getElementById("ip-quality");
+
+    if (difficulty === "N/A") {
+      setIconColors("#888", "#666");
+      difficultyLevel.innerText = "";
+      ipQuality.innerHTML = "N/A";
+      return;
     }
- 
-    function setIconColors(primaryColor, secondaryColor) {
-        const gradient = document.querySelector('#gradient');
-        gradient.innerHTML = `
+
+    const cleanDifficulty = difficulty.replace("0x", "").replace(/^0+/, "");
+    const hexLength = cleanDifficulty.length;
+
+    let color, secondaryColor, textColor, level, qualityText;
+
+    if (hexLength <= 2) {
+      color = "#F44336";
+      secondaryColor = "#d32f2f";
+      textColor = "#ff6b6b";
+      level = "(困难)";
+      qualityText = "高风险";
+    } else if (hexLength === 3) {
+      color = "#FFC107";
+      secondaryColor = "#ffa000";
+      textColor = "#ffd700";
+      level = "(中等)";
+      qualityText = "中等";
+    } else if (hexLength === 4) {
+      color = "#8BC34A";
+      secondaryColor = "#689f38";
+      textColor = "#9acd32";
+      level = "(简单)";
+      qualityText = "良好";
+    } else {
+      color = "#4CAF50";
+      secondaryColor = "#388e3c";
+      textColor = "#98fb98";
+      level = "(极易)";
+      qualityText = "优秀";
+    }
+
+    setIconColors(color, secondaryColor);
+    difficultyLevel.innerHTML = `<span style="color: ${textColor}">${level}</span>`;
+    ipQuality.innerHTML = `<span style="color: ${textColor}">${qualityText}</span>`;
+  }
+
+  function setIconColors(primaryColor, secondaryColor) {
+    const gradient = document.querySelector("#gradient");
+    gradient.innerHTML = `
             <stop offset="0%" style="stop-color:${primaryColor};stop-opacity:1" />
             <stop offset="100%" style="stop-color:${secondaryColor};stop-opacity:1" />
         `;
+  }
+  function checkVariableType(variable) {
+    if (variable instanceof URL) {
+      return "URL";
+    } else if (typeof variable === "string") {
+      return "String";
+    } else {
+      return "Unknown type";
     }
- 
-    // 拦截 fetch 请求
-    const originalFetch = window.fetch;
-    window.fetch = async function(resource, options) {
-        const response = await originalFetch(resource, options);
- 
-        if ((resource.includes('/backend-api/sentinel/chat-requirements')||resource.includes('backend-anon/sentinel/chat-requirements')) && options.method === 'POST') {
-            const clonedResponse = response.clone();
-            clonedResponse.json().then(data => {
-                const difficulty = data.proofofwork ? data.proofofwork.difficulty : 'N/A';
-                const persona = data.persona || 'N/A';
-                document.getElementById('difficulty').innerText = difficulty;
- 
-                const personaContainer = document.getElementById('persona-container');
-                if (persona && !persona.toLowerCase().includes('free')) {
-                    personaContainer.style.display = 'block';
-                    document.getElementById('persona').innerText = persona;
-                } else {
-                    personaContainer.style.display = 'none';
-                }
- 
-                updateDifficultyIndicator(difficulty);
-            }).catch(e => console.error('解析响应时出错:', e));
-        }
-        return response;
-    };
+  }
+  // 拦截 fetch 请求
+  const originalFetch = window.fetch;
+  window.fetch = async function (resource, options) {
+    const response = await originalFetch(resource, options);
+    let url_str = "";
+    if (checkVariableType(resource) == "URL") {
+      url_str = resource.href;
+    } else {
+      url_str = resource;
+    }
+    if (
+      (url_str.includes("/backend-api/sentinel/chat-requirements") ||
+        url_str.includes("backend-anon/sentinel/chat-requirements")) &&
+      options.method === "POST"
+    ) {
+      const clonedResponse = response.clone();
+      clonedResponse
+        .json()
+        .then((data) => {
+          const difficulty = data.proofofwork
+            ? data.proofofwork.difficulty
+            : "N/A";
+          const persona = data.persona || "N/A";
+          document.getElementById("difficulty").innerText = difficulty;
+
+          const personaContainer = document.getElementById("persona-container");
+          if (persona && !persona.toLowerCase().includes("free")) {
+            personaContainer.style.display = "block";
+            document.getElementById("persona").innerText = persona;
+          } else {
+            personaContainer.style.display = "none";
+          }
+
+          updateDifficultyIndicator(difficulty);
+        })
+        .catch((e) => console.error("解析响应时出错:", e));
+    }
+    return response;
+  };
 })();
