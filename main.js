@@ -198,6 +198,51 @@ function killSingBox() {
     }
 }
 
+async function loadIdentifyJSON(filePath) {
+  try {
+    const jsonData = fs.readFileSync(filePath, 'utf8');
+    const cookiesData = JSON.parse(jsonData);
+    // 设置 Cookies
+    await setCookies(cookiesData);
+
+    // 提示用户重启应用
+    await dialog.showMessageBox(mainWindow, {
+        type: "info",
+        title: "导入身份文件成功，重启后生效",
+        message: "即将重启应用程序",
+        buttons: ["重启应用"],
+    });
+    relaunchAPP();
+  } catch (error) {
+    console.error('读取 JSON 文件失败:', error);
+    dialog.showErrorBox('错误', '无法读取 JSON 文件，请检查文件格式是否正确。');
+  }
+}
+
+// 设置 Cookies
+async function setCookies(cookiesData) {
+  for (const cookie of cookiesData) {
+    const cookieDetails = {
+      url: `https://${cookie.domain.replace(/^\./, "")}`, // 移除开头的 "."
+      name: cookie.name,
+      value: cookie.value,
+      domain: cookie.domain,
+      path: cookie.path,
+      secure: cookie.secure,
+      httpOnly: cookie.httpOnly,
+      expirationDate: cookie.expirationDate,
+      sameSite: cookie.sameSite,
+    };
+
+    try {
+      await session.defaultSession.cookies.set(cookieDetails);
+      console.log(`✅ Cookie ${cookie.name} 设置成功`);
+    } catch (err) {
+      console.error(`❌ 设置 Cookie ${cookie.name} 失败:`, err);
+    }
+  }
+}
+
 function restartSingBox() {
     if (singBoxProcess) {
         killSingBox();
@@ -303,6 +348,26 @@ const menu_options = [
                     store.clear();
                     clearCookiesAndData(mainWindow);
                 },
+            },
+            {
+                label: "从文件导入身份凭据",
+                click: async function () {
+                    try {
+                        const result = await dialog.showOpenDialog({
+                            title: '选择 JSON 文件',
+                            filters: [{ name: 'JSON 文件', extensions: ['json'] }],
+                            properties: ['openFile']
+                        });
+                    
+                        if (!result.canceled && result.filePaths.length > 0) {
+                            const filePath = result.filePaths[0];
+                            console.log('用户选择的文件:', filePath);
+                            await loadIdentifyJSON(filePath);
+                        }
+                    } catch (err) {
+                        console.error('打开文件对话框出错:', err);
+                    }
+                }
             },
             { type: "separator" },
             {
